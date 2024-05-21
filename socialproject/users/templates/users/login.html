@@ -1,8 +1,20 @@
 {% extends "users/base.html" %} {% block title %}Login{% endblock %} {% block content %}
-<h1>Login Form</h1>
-<form method="post">
-  {% csrf_token %} {{form.as_p}}
-  <input type="submit" value="Login" />
+<h1 class="text-2xl m-10">User Login</h1>
+<div class="container py-3"></div>
+<form method="post" class="bg-white shadow-md m-10 w-2/5 rounded px-8 pt-6 pb-8 mb-4">
+  {% csrf_token %}
+  <div class="mb-2">
+    <label for="" class="block text-gray-700 font-bold mb-2">Username</label>
+    <div class="shadow appearance-none border rounded text-gray-700 py-2 px-3 mr-10">{{form.username}}</div>
+  </div>
+  <div class="mb-2">
+    <label for="" class="block text-gray-700 font-bold mb-2">Password</label>
+    <div class="shadow appearance-none border rounded text-gray-700 py-2 px-3 mr-10">{{form.password}}</div>
+  </div>
+
+  <button type="submit" class="text-white bg-green-500 px-5 rounded shadow py-2 mt-5">Login</button>
 </form>
-<a href="{% url 'password_reset' %}">Forgot password? Click here to reset</a>
+<p class="px-10 py-10">
+  <a class="text-indigo-500" href="{% url 'password_reset' %}">Forgot password? Click here to reset</a>
+</p>
 {% endblock %}

@@ -1,0 +1,10 @@
+{% extends "users/base.html" %} {% block title %}All Post{% endblock %} {% block content %}
+
+<div class="flex justify-center mt-5 p-10">
+  <h2>Post List</h2>
+</div>
+
+{% endblock %} {% for post in posts%}
+<p>{{post.title}}</p>
+<p>{{post.create}}</p>
+{% endfor %}

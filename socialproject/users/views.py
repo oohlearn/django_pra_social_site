@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib.auth.views import LogoutView
 from .models import Profile
+from posts.models import Post
 # Create your views here.
 
 
@@ -34,7 +35,11 @@ class UserLogoutView(LogoutView):
 
 @login_required
 def home(request):
-    return render(request, "users/index.html")
+    current_user = request.user
+    profile = Profile.objects.filter(user=current_user).first()
+    posts = Post.objects.filter(user=current_user)
+    return render(request, "users/index.html", {'posts': posts,
+                                                "profile": profile})
 
 
 def register(request):

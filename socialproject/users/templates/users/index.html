@@ -1,1 +1,20 @@
-{% extends "users/base.html" %} {% block title %}Home{% endblock %} {% block content %} HomePage {% endblock %}
+{% extends "users/base.html" %} {% block title %}All Post{% endblock %} {% block content %}
+
+<div class="flex justify-center mt-5 p-10">
+  <h2 class="text-3xl font-normal mb-2 text-gray-500">My Posts</h2>
+</div>
+<div class="grid grid-cols-1"></div>
+{% for post in posts%}
+<a href="">
+  <div class="user-container flex mx-5 my-5">
+    <img src="{{profile.photo.url}}" class="w-10 y-10 rounded-full" />
+    <div class="mx-2 my-2 font-bold text-indigo-500">{{post.user}}</div>
+  </div>
+  <div class="rounded overflow-hidden w-[470px] bg-white shadow-lg">
+    <img src="{{post.image.url}}" alt="" />
+  </div>
+</a>
+
+{% endfor %} {% endblock %}
+<p>{{post.title}}</p>
+<p>{{post.create}}</p>
