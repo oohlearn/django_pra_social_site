@@ -23,3 +23,18 @@ class Post(models.Model):
             self.slug = slugify(self.title)
             # 將標題slugigy，變成url友好的模樣
         super().save(*args, **kwargs)
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE,
+                             related_name="comments")
+    body = models.CharField(max_length=1000)
+    created_at = models.DateTimeField(auto_now=True)
+    posted_by = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ["created_at"]
+        
+    def __str__(self) -> str:
+        return self.body
+    

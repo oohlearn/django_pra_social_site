@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post
-from .forms import PostForm
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from users.models import Profile
 
@@ -22,12 +22,26 @@ def create_post(request):
 def post_list(request):
     posts = Post.objects.all()
     profile = Profile.objects.all()
+    if request.method == "POST":
+        comment_form = CommentForm(request.POST)
+        comment = comment_form.save(commit=False)
+        comment.posted_by = request.user
+        post_id = request.POST.get('post_id')
+        post = get_object_or_404(Post, id=post_id)
+        comment.post = post
+        comment.save()
+        return redirect("/posts")
+
+    else:
+        comment_form = CommentForm()
+
     logged_user = request.user
     return render(request, "posts/post_list.html",
                   {'posts': posts,
                    "profile": profile,
-                   "logged_user": logged_user})
-
+                   "logged_user": logged_user,
+                   "comment_form": comment_form})
+ 
 
 def like(request):
     post_id = request.POST.get("post_id")

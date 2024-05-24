@@ -1,4 +1,4 @@
-{% extends "users/base.html" %} {% load static %}{% block title %}All Post{% endblock %} {% block content %}
+{% extends "users/base.html" %} {% load mathfilters %} {% load static %}{% block title %}All Post{% endblock %} {% block content %}
 
 <div class="flex justify-center mt-5 p-10">
   <h2 class="text-3xl font-normal mb-2 text-gray-500">All Posts</h2>
@@ -27,10 +27,27 @@
         <img src="{% static 'users/images/comment.png' %}" class="h-5 w-5" />
         <img src="{% static 'users/images/share.png' %}" class="h-5 w-5" />
       </div>
+      <div class="py-2">{% if post.liked_by.count == 0 %} {% elif post.liked_by.count == 1 %} {{ post.liked_by.first }} likes this {% else %} {{ post.liked_by.first }} and {{post.liked_by.count | sub:1}} people like this {% endif %}</div>
     </div>
     <div class="px-6 pt-2 pb-5">
       <div class="font-bold text-xl mb-2">{{post.title}}</div>
       <div class="text-gray-700 text-base">{{post.caption}}</div>
+    </div>
+    <div class="px-5 py-5">
+      {% for comment in post.comments.all %}
+      <div><b>{{comment.posted_by}} </b>: {{comment.body}}</div>
+      <div>{{comment.created_at}}</div>
+      {% endfor %}
+    </div>
+    <div class="px-5 py-5">
+      <form method="post" class="bg-white rounded" name="comment_form">
+        {% csrf_token %}
+        <div class="flex">
+          <div class="appearance-none border mr-10 text-gray-700">{{comment_form.body}}</div>
+          <input type="hidden" name="post_id" id="post_id" value="{{post.id}}" />
+          <div><button type="submit" class="bg-green-500 text-white px-5 rounded">Send</button></div>
+        </div>
+      </form>
     </div>
   </a>
 
@@ -44,6 +61,14 @@
       method: "POST",
       url: "/posts/like/",
       data: { post_id: post_id, csrfmiddlewaretoken: window.CSRF_TOKEN },
+      // 理論上要用react去接收djanog後端傳回來的request，而不是用ajax去整頁刷新
+      success: function (response) {
+        // 仅在AJAX请求成功后进行重定向
+        window.location.href = "http://127.0.0.1:8000/posts/";
+      },
+      error: function (error) {
+        console.log("Error:", error);
+      },
     });
   });
 </script>

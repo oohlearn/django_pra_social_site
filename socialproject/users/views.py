@@ -38,7 +38,7 @@ def home(request):
     current_user = request.user
     profile = Profile.objects.filter(user=current_user).first()
     posts = Post.objects.filter(user=current_user)
-    return render(request, "users/index.html", {'posts': posts,
+    return render(request, "posts/post_list.html", {'posts': posts,
                                                 "profile": profile})
 
 
