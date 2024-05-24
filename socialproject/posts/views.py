@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post
 from .forms import PostForm
 from django.contrib.auth.decorators import login_required
+from users.models import Profile
 
 
 @login_required
@@ -20,4 +21,19 @@ def create_post(request):
 
 def post_list(request):
     posts = Post.objects.all()
-    return render(request, "posts/post_list.html", {'posts': posts})
+    profile = Profile.objects.all()
+    logged_user = request.user
+    return render(request, "posts/post_list.html",
+                  {'posts': posts,
+                   "profile": profile,
+                   "logged_user": logged_user})
+
+
+def like(request):
+    post_id = request.POST.get("post_id")
+    post = get_object_or_404(Post, id=post_id)
+    if post.liked_by.filter(id=request.user.id).exists():
+        post.liked_by.remove(request.user)
+    else:
+        post.liked_by.add(request.user)
+    return redirect("posts:post_list")

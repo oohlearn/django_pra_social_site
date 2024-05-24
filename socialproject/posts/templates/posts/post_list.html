@@ -1,10 +1,50 @@
-{% extends "users/base.html" %} {% block title %}All Post{% endblock %} {% block content %}
+{% extends "users/base.html" %} {% load static %}{% block title %}All Post{% endblock %} {% block content %}
 
 <div class="flex justify-center mt-5 p-10">
-  <h2>Post List</h2>
+  <h2 class="text-3xl font-normal mb-2 text-gray-500">All Posts</h2>
 </div>
+<div class="grid mx-60 p-10 grid-cols-1">
+  {% for post in posts%}
+  <a href="">
+    <div class="rounded overflow-hidden w-[470px] h-[470px] bg-white shadow-lg"></div>
 
-{% endblock %} {% for post in posts%}
-<p>{{post.title}}</p>
-<p>{{post.create}}</p>
-{% endfor %}
+    <div class="user-container flex mx-5 my-3">
+      <img src="{{post.user.profile.photo.url}}" class="w-10 y-10 rounded-full" />
+      <div class="mx-2 my-2 font-bold text-indigo-500">{{post.user}}</div>
+    </div>
+    <div>
+      <img src="{{post.image.url}}" alt="" />
+    </div>
+    <div class="px-6 py-4">
+      <div class="icon-container flex gap-3">
+        <a id="{{post.id}}" class="btn-like">
+          {% if logged_user in post.liked_by.all %}
+          <img src="{% static 'users/images/colored_heart.png' %}" class="h-5 w-5" />
+          {% else %}
+          <img src="{% static 'users/images/heart.png' %}" class="h-5 w-5" />
+          {% endif %}
+        </a>
+        <img src="{% static 'users/images/comment.png' %}" class="h-5 w-5" />
+        <img src="{% static 'users/images/share.png' %}" class="h-5 w-5" />
+      </div>
+    </div>
+    <div class="px-6 pt-2 pb-5">
+      <div class="font-bold text-xl mb-2">{{post.title}}</div>
+      <div class="text-gray-700 text-base">{{post.caption}}</div>
+    </div>
+  </a>
+
+  {% endfor %}
+</div>
+<script type="text/javascript">
+  window.CSRF_TOKEN = "{{csrf_token}}";
+  $(document).on("click", ".btn-like", function () {
+    var post_id = this.id;
+    $.ajax({
+      method: "POST",
+      url: "/posts/like/",
+      data: { post_id: post_id, csrfmiddlewaretoken: window.CSRF_TOKEN },
+    });
+  });
+</script>
+{% endblock %}

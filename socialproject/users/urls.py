@@ -26,4 +26,5 @@ urlpatterns = [
          name='password_reset_complete'),
     path("register/", v.register, name='register'),
     path("edit/", v.edit, name='edit'),
+
 ]

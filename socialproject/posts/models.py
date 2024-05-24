@@ -11,6 +11,9 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, blank=True)
     create = models.DateField(auto_now_add=True)
+    liked_by = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                      blank=True,
+                                      related_name="posts_liked")
 
     def __str__(self):
         return self.title
